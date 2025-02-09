@@ -13,6 +13,7 @@ public class Post {
     private Long id;
     private String title;
     private String excerpt;
+    private String content;
     private String author;
     private LocalDateTime published_at;
     private boolean is_published;
@@ -43,6 +44,22 @@ public class Post {
 
     public void setExcerpt(String excerpt) {
         this.excerpt = excerpt;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Set<post_tag> getPostTags() {
+        return postTags;
+    }
+
+    public void setPostTags(Set<post_tag> postTags) {
+        this.postTags = postTags;
     }
 
     public String getAuthor() {
