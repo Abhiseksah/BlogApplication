@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${post.title}">Post Title</title>
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${post.title}">Post Title</h1>
+    <p><strong th:text="${post.author}">Author Name</strong>, <span th:text="${post.created_at}">Date</span></p>
+    <p th:text="${post.content}">Full post content...</p>
+    <a href="/">Back to Home</a>
+</div>
+</body>
+</html>

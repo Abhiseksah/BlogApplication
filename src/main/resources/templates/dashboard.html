@@ -3,43 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>My Blog Application</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 
-<div class="container mt-3">
-    <div class="d-flex justify-content-between align-items-center">
+<div class="container">
+    <div class="header">
         <h1>My Blog Application</h1>
-        <a href="/login" class="text-primary">Login</a>
+        <a href="/login">Login</a>
     </div>
 
-    <div class="d-flex justify-content-between my-3">
-        <div>
-            <input type="text" class="form-control" placeholder="Search" />
-        </div>
-        <div>
-            <select class="form-select">
-                <option>Filter</option>
-            </select>
-            <select class="form-select">
-                <option>Sort</option>
-            </select>
-        </div>
+    <div class="search">
+        <input type="text" placeholder="Search" />
+        <select>
+            <option>Filter</option>
+        </select>
+        <select>
+            <option>Sort</option>
+        </select>
     </div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3" th:each="post : ${posts}">
-            <div class="border p-3">
-                <h3 th:text="${post.title}">Title</h3>
-                <p><strong th:text="${post.author}">Author Name</strong>, <span th:text="${post.created_at}">Date</span></p>
-                <p th:text="${post.content}">Lorem ipsum dolor sit amet...</p>
-            </div>
+    <div class="posts">
+        <div th:if="${#lists.isEmpty(posts)}">
+            <p>No posts available.</p>
         </div>
+
+        <div th:each="post : ${posts}" class="post">
+            <a th:href="@{/post/{id}(id=${post.id})}" class ="post-link">
+            <h3 th:text="${post.title}">Title</h3>
+            <p><strong th:text="${post.author}">Author Name</strong>, <span th:text="${post.created_at}">Date</span></p>
+            <p th:text="${post.content}">Lorem ipsum dolor sit amet...</p>
+            </a>
+        </div>
+
     </div>
 
-    <div class="d-flex justify-content-between mt-3">
-        <a href="#" class="btn btn-outline-primary">&lt; Previous</a>
-        <a href="#" class="btn btn-outline-primary">Next &gt;</a>
+    <div class="pagination">
+        <a href="#">Previous</a>
+        <a href="#">Next</a>
     </div>
 </div>
 
