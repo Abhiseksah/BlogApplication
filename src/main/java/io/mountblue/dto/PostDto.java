@@ -1,6 +1,7 @@
 package io.mountblue.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class PostDto {
     private Long id;
@@ -12,6 +13,7 @@ public class PostDto {
     private boolean is_published;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
+
 
     public PostDto(Long id, String title, String excerpt, String content, String author, LocalDateTime published_at, boolean is_published, LocalDateTime created_at, LocalDateTime updated_at) {
         this.id = id;
