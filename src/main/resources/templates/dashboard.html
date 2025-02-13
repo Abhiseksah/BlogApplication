@@ -14,7 +14,10 @@
     </div>
 
     <div class="search">
-        <input type="text" placeholder="Search" />
+        <form action="/posts/search" method="get">
+            <input type="text" name="keyword" placeholder="Search posts...">
+            <button type="submit">Search</button>
+        </form>
         <select>
             <option>Filter</option>
         </select>
@@ -30,12 +33,19 @@
 
         <div th:each="post : ${posts}" class="post">
             <a th:href="@{/post/{id}(id=${post.id})}" class ="post-link">
-            <h3 th:text="${post.title}">Title</h3>
-            <p><strong th:text="${post.author}">Author Name</strong>, <span th:text="${post.created_at}">Date</span></p>
-            <p th:text="${post.content}">Lorem ipsum dolor sit amet...</p>
+                <h3 th:text="${post.title}">Title</h3>
+                <p><strong th:text="${post.author}">Author Name</strong>, <span th:text="${post.created_at}">Date</span></p>
+                <p th:text="${post.excerpt}"></p>
+                <p th:text="${post.content}">Lorem ipsum dolor sit amet...</p>
             </a>
-        </div>
 
+            <div class="post-actions">
+                <a th:href="@{/post/edit/{id}(id=${post.id})}" class="button edit">Edit</a>
+                                <form th:action="@{/post/delete/{id}(id=${post.id})}" method="post">
+                                    <button type="submit" class="button delete">Delete</button>
+                                </form>
+            </div>
+        </div>
     </div>
 
     <div class="pagination">
