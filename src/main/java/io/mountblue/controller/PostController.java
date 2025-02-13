@@ -5,6 +5,7 @@ import io.mountblue.models.Post;
 import io.mountblue.models.Tag;
 import io.mountblue.service.PostService;
 import io.mountblue.service.PostTagService;
+import io.mountblue.service.TagService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,16 +17,20 @@ public class PostController {
 
     private final PostService postService;
     private final PostTagService postTagService;
+    private final TagService tagService;
 
-    public PostController(PostService postService , PostTagService postTagService){
+    public PostController(PostService postService , PostTagService postTagService,TagService tagService){
         this.postService = postService;
         this.postTagService = postTagService;
+        this.tagService = tagService;
     }
 
     @GetMapping("/")
     public String dashboard(Model model){
         List<Post> posts = postService.getAllPosts();
+        List<Tag> tags = tagService.getAllTags();
         model.addAttribute("posts",posts);
+        model.addAttribute("tag",tags);
         return "dashboard";
     }
 
