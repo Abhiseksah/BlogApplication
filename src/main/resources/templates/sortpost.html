@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>My Blog Application</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <style>
+    .container {
+        display: flex;
+    }
+    .sidebar {
+        width: 20%;
+        padding: 20px;
+        background: #f4f4f4;
+    }
+    .content {
+        width: 80%;
+        padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Sidebar for Filters -->
+  <div class="sidebar">
+    <h3>Filter by</h3>
+    <form action="/posts/filter" method="get">
+      <!-- Author Filter -->
+      <h4>Authors</h4>
+      <div th:each="post : ${posts}">
+        <input type="checkbox" name="author" th:value="${post.author}" th:id="${'author-' + author}">
+        <label th:for="${'author-' + author}" th:text="${post.author}"></label>
+      </div>
+
+      <!-- Tags Filter -->
+      <h4>Tags</h4>
+      <div th:each="tag : ${tag}">
+        <input type="checkbox" name="tag" th:value="${tag.name}" th:id="${'tag-' + tag}">
+        <label th:for="${'tag-' + tag}" th:text="${tag.name}"></label>
+      </div>
+      <!-- Date Filter -->
+      <h4>Created Date</h4>
+      <label for="startDate">From:</label>
+      <input type="datetime-local" id="startDate" name="startDate">
+
+      <label for="endDate">To:</label>
+      <input type="datetime-local" id="endDate" name="endDate">
+      <button type="submit">Apply Filters</button>
+    </form>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <div class="header">
+      <h1>My Blog Application</h1>
+      <a href="/login">Login</a>
+    </div>
+
+    <div class="search">
+      <form action="/posts/search" method="get">
+        <input type="text" name="keyword" placeholder="Search posts...">
+        <button type="submit">Search</button>
+      </form>
+      <div class="search-sort">
+        <form method="get" action="/posts/sort">
+          <label for="sort">Sort by:</label>
+          <select id="sort" name="sort" onchange="this.form.submit()">
+            <option value="asc" th:selected="${sort == 'new'}">New to Old</option>
+            <option value="desc" th:selected="${sort == 'old'}">Old to New</option>
+          </select>
+        </form>
+      </div>
+    </div>
+
+    <div class="posts">
+      <div th:if="${#lists.isEmpty(posts)}">
+        <p>No posts available.</p>
+      </div>
+
+      <div th:each="post : ${posts}" class="post">
+        <a th:href="@{/post/{id}(id=${post.id})}" class="post-link">
+          <h3 th:text="${post.title}">Title</h3>
+          <p><strong th:text="${post.author}">Author Name</strong>, <span th:text="${post.created_at}">Date</span></p>
+          <p th:text="${post.excerpt}"></p>
+        </a>
+
+        <div class="post-actions">
+          <a th:href="@{/post/edit/{id}(id=${post.id})}" class="button edit">Edit</a>
+          <form th:action="@{/post/delete/{id}(id=${post.id})}" method="post">
+            <button type="submit" class="button delete">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
