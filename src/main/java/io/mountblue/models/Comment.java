@@ -3,6 +3,7 @@ package io.mountblue.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Comment {
@@ -21,6 +22,16 @@ public class Comment {
 
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
+    @ManyToMany
+    private List<Comment> comments ;
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     public Long getId() {
         return id;

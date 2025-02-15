@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New/Edit Post</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            width: 50%;
+            margin: 20px auto;
+            text-align: left;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #000;
+            font-size: 16px;
+        }
+
+        textarea {
+            height: 200px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>New/Edit Post</h1>
+    <form th:action="@{/post/edit/{id}(id=${post.id})}" method="post">
+        <input type="hidden" name="_method" value="PUT">
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" th:value="${post.title}" required>
+        </div>
+        <br>
+<!--        <div>-->
+<!--            <label for="tag">Tags:</label>-->
+<!--            <input type="text" id="tag" name="tag" th:value="${taglist}" readonly>-->
+<!--        </div>-->
+        <br>
+        <div>
+            <label for="content">Content:</label>
+            <textarea id="content" name="content" rows="5" required th:text="${post.content}"></textarea>
+        </div>
+        <br>
+        <button type="submit">Update</button>
+    </form>
+</div>
+</body>
+</html>
