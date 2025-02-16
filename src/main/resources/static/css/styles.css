@@ -47,13 +47,44 @@ body {
 .pagination a:hover {
     background-color: #f0f0f0;
 }
-    .post-link {
-        text-decoration: none; /* No underline */
-        color: black; /* Normal text color */
-        font-weight: normal;
-        display: block; /* Makes the whole title clickable */
-        padding: 5px;
-    }
-    .post-link:hover {
-        color: darkgray; /* Slight color change on hover */
-    }
+.post-link {
+    text-decoration: none;
+    color: black;
+    font-weight: normal;
+    display: block;
+    padding: 5px;
+}
+.post-link:hover {
+    color: darkgray;
+}
+.button {
+     display: inline-block;
+     padding: 5px 10px;
+     font-size: 14px;
+     text-decoration: none;
+     border: none;
+     cursor: pointer;
+     border-radius: 3px;
+}
+.edit {
+    background-color: #d6d6d6;
+    color: #333;
+    border: 1px solid #bbb;
+}
+
+.delete {
+   background-color: #d6d6d6;
+   color: #333;
+   border: 1px solid #bbb;
+}
+.edit:hover, .delete:hover {
+   background-color: #c0c0c0;
+}
+.post-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+.post-actions form {
+    margin: 0;
+}

@@ -15,7 +15,7 @@ public class Tag {
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
-    private Set<post_tag> postTags = new HashSet<>();
+    private Set<Post_tag> postTags = new HashSet<>();
 
     public Long getId() {
         return id;

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet"
+          th:href="@{/css/loginForm.css}"/>
+    <style>
+        body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+        background-color: #fff;
+        margin: 0;
+    }
+    .container {
+        text-align: center;
+    }
+    h2 {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+    input {
+        display: block;
+        width: 250px;
+        padding: 10px;
+        margin: 10px auto;
+        border: 1px solid black;
+        border-radius: 5px;
+    }
+    button {
+        padding: 10px 20px;
+        border: 1px solid black;
+        background: white;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    button:hover {
+        background: #f0f0f0;
+    }
+    .register-link {
+        margin-top: 10px;
+        font-size: 14px;
+    }
+    .register-link a {
+        text-decoration: none;
+        color: blue;
+    }
+    </style>
+
+</head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+
+<div class="container">
+    <h2>Login</h2>
+    <form th:action="@{/authenticateTheUser}" th:method="post">
+        <div th:if="${param.error}">
+            <i class="failed">Sorry! You entered invalid username/password.</i>
+        </div>
+        <div th:if="${param.logout}">
+            <i class="logout">You have logged out successfully</i>
+        </div>
+        <input th:type="text" th:name="username" placeholder="Email" required>
+        <input th:type="password" th:name="password" placeholder="Password" required>
+        <button th:type="submit">Submit</button>
+    </form>
+    <p class="register-link">Doesn't have an account? <a th:href="@{/signup}">Create one</a></p>
+</div>
+
+</body>
+</html>

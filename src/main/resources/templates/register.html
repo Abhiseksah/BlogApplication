@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            width: 300px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: black;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #333;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+
+        .login-link {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: blue;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Create account</h2>
+
+<!--    <div th:if="${error}" class="error" th:text="${error}"></div>-->
+
+    <!-- Registration form -->
+    <form th:action="@{/signup}" th:object="${userDto}" method="post">
+        <input type="text" th:field="*{name}" placeholder="Name" required>
+<!--        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>-->
+
+        <input type="email" th:field="*{email}" placeholder="Email" required>
+<!--        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>-->
+
+        <input type="password" th:field="*{password}" placeholder="Password" required>
+<!--        <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>-->
+
+        <input type="password" th:field="*{confirmPassword}" placeholder="Confirm Password" required>
+<!--        <div class="error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>-->
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Login link -->
+    <div class="login-link">
+        Have an account? <a th:href="@{/login}">Login</a>
+    </div>
+</div>
+
+</body>
+</html>

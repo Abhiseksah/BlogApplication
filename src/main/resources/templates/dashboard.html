@@ -5,6 +5,97 @@
     <title>My Blog Application</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.search {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.search input, .search select {
+    padding: 8px;
+    margin-right: 10px;
+    width: 200px;
+}
+.posts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.post {
+    border: 1px solid #ddd;
+    padding: 15px;
+}
+.pagination {
+    display: flex;
+    justify-content: space-between;
+}
+.pagination a {
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    margin-right: 5px;
+}
+.pagination a:hover {
+    background-color: #f0f0f0;
+}
+.post-link {
+    text-decoration: none;
+    color: black;
+    font-weight: normal;
+    display: block;
+    padding: 5px;
+}
+.post-link:hover {
+    color: darkgray;
+}
+.button {
+     display: inline-block;
+     padding: 5px 10px;
+     font-size: 14px;
+     text-decoration: none;
+     border: none;
+     cursor: pointer;
+     border-radius: 3px;
+}
+.edit {
+    background-color: #d6d6d6;
+    color: #333;
+    border: 1px solid #bbb;
+}
+
+.delete {
+   background-color: #d6d6d6;
+   color: #333;
+   border: 1px solid #bbb;
+}
+.edit:hover, .delete:hover {
+   background-color: #c0c0c0;
+}
+.post-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+.post-actions form {
+    margin: 0;
+}
+
         .container {
             display: flex;
         }
@@ -17,6 +108,7 @@
             width: 80%;
             padding: 20px;
         }
+
     </style>
 </head>
 <body>
@@ -25,21 +117,27 @@
     <!-- Sidebar for Filters -->
     <div class="sidebar">
         <h3>Filter by</h3>
-        <form action="/posts/filter" method="get">
+        <form th:action="@{/}" method="get">
             <!-- Author Filter -->
             <h4>Authors</h4>
-            <div th:each="post : ${posts}">
-                <input type="checkbox" name="author" th:value="${post.author}" th:id="${'author-' + author}">
-                <label th:for="${'author-' + author}" th:text="${post.author}"></label>
+            <div th:each="post : ${user}">
+                <input type="checkbox" name="author" th:value="${post.name}" th:id="${'author-' + post}">
+                <label th:for="${'author-' + post}" th:text="${post.name}"></label>
             </div>
 
             <!-- Tags Filter -->
             <h4>Tags</h4>
             <div th:each="tag : ${tag}">
-                <input type="checkbox" name="tag" th:value="${tag.name}" th:id="${'tag-' + tag}">
+                <input type="checkbox" name="tag" th:value="${tag.id}" th:id="${'tag-' + tag}">
                 <label th:for="${'tag-' + tag}" th:text="${tag.name}"></label>
             </div>
+            <!-- Date Filter -->
+            <h4>Created Date</h4>
+            <label for="startDate">From:</label>
+            <input type="datetime-local" id="startDate" name="startDate">
 
+            <label for="endDate">To:</label>
+            <input type="datetime-local" id="endDate" name="endDate">
             <button type="submit">Apply Filters</button>
         </form>
     </div>
@@ -49,6 +147,7 @@
         <div class="header">
             <h1>My Blog Application</h1>
             <a href="/login">Login</a>
+            <a href="/newpost">New Post</a>
         </div>
 
         <div class="search">
@@ -56,11 +155,15 @@
                 <input type="text" name="keyword" placeholder="Search posts...">
                 <button type="submit">Search</button>
             </form>
-            <select name="sort">
-                <option value="">Sort</option>
-                <option value="date_asc">Oldest First</option>
-                <option value="date_desc">Newest First</option>
-            </select>
+            <div class="search-sort">
+                <form method="get" action="/posts/sort">
+                    <label for="sort">Sort by:</label>
+                    <select id="sort" name="sort" onchange="this.form.submit()">
+                        <option value="asc" th:selected="${sort == 'new'}">New to Old</option>
+                        <option value="desc" th:selected="${sort == 'old'}">Old to New</option>
+                    </select>
+                </form>
+            </div>
         </div>
 
         <div class="posts">
@@ -71,7 +174,7 @@
             <div th:each="post : ${posts}" class="post">
                 <a th:href="@{/post/{id}(id=${post.id})}" class="post-link">
                     <h3 th:text="${post.title}">Title</h3>
-                    <p><strong th:text="${post.author}">Author Name</strong>, <span th:text="${post.created_at}">Date</span></p>
+                    <p><strong th:text="${post.author.name}">Author Name</strong>, <span th:text="${post.created_at}">Date</span></p>
                     <p th:text="${post.excerpt}"></p>
                 </a>
 
@@ -86,5 +189,19 @@
     </div>
 </div>
 
+
+    <div th:if="${totalPages > 1 }" >
+        <div>
+            <a th:if="${currentPage > 1}" th:href="@{/(start=${currentPage - 1} , limit=${limit})}">Previous</a>
+            <span th:if="${currentPage == 1}" style="color:gray;">Previous</span>
+        </div>
+        <div>
+            <a th:if="${currentPage < totalPages}" th:href="@{/(start=${currentPage + 1} , limit=${limit})}">Next</a>
+            <span th:if="${currentPage == totalPages}" style="color:gray;">Next</span>
+        </div>
+    </div>
+
+
 </body>
+
 </html>

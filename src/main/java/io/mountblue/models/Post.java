@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,13 +16,26 @@ public class Post {
     private String excerpt;
     @Column(columnDefinition = "TEXT")
     private String content;
-    private String author;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
+    private User author;
     private LocalDateTime published_at;
     private boolean is_published;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private Set<post_tag> postTags = new HashSet<>();
+    private Set<Post_tag> postTags = new HashSet<>();
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL,orphanRemoval=true)
+    private List<Comment> comments;
+
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     public Long getId() {
         return id;
@@ -55,19 +69,19 @@ public class Post {
         this.content = content;
     }
 
-    public Set<post_tag> getPostTags() {
+    public Set<Post_tag> getPostTags() {
         return postTags;
     }
 
-    public void setPostTags(Set<post_tag> postTags) {
+    public void setPostTags(Set<Post_tag> postTags) {
         this.postTags = postTags;
     }
 
-    public String getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 

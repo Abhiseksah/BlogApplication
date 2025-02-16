@@ -1,5 +1,7 @@
 package io.mountblue.dto;
 
+import io.mountblue.models.User;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -8,14 +10,14 @@ public class PostDto {
     private String title;
     private String excerpt;
     private String content;
-    private String author;
+    private User author;
     private LocalDateTime published_at;
     private boolean is_published;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
 
 
-    public PostDto(Long id, String title, String excerpt, String content, String author, LocalDateTime published_at, boolean is_published, LocalDateTime created_at, LocalDateTime updated_at) {
+    public PostDto(Long id, String title, String excerpt, String content, User author, LocalDateTime published_at, boolean is_published, LocalDateTime created_at, LocalDateTime updated_at) {
         this.id = id;
         this.title = title;
         this.excerpt = excerpt;
@@ -62,11 +64,11 @@ public class PostDto {
         this.content = content;
     }
 
-    public String getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 

@@ -24,7 +24,9 @@ public class PostTagServiceImpl implements PostTagService{
             tagString.append(tags);
             tagString.append(",");
         }
-        tagString.deleteCharAt(tagString.length()-1);
+        if(tagString.length()>0){
+            tagString.deleteCharAt(tagString.length()-1);
+        }
         return tagString.toString();
     }
 }

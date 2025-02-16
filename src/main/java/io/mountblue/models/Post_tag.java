@@ -5,8 +5,9 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class post_tag {
+public class Post_tag {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -20,11 +21,14 @@ public class post_tag {
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
 
-    public post_tag(Post post, Tag tag, LocalDateTime created_at, LocalDateTime updated_at) {
+    public Post_tag(Post post, Tag tag, LocalDateTime created_at, LocalDateTime updated_at) {
         this.post = post;
         this.tag = tag;
         this.created_at = created_at;
         this.updated_at = updated_at;
+    }
+
+    public Post_tag() {
     }
 
     public Post getPost() {

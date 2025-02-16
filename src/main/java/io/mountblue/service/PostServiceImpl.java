@@ -4,13 +4,22 @@ import io.mountblue.dto.PostDto;
 import io.mountblue.models.Post;
 import io.mountblue.models.Post_tag;
 import io.mountblue.models.Tag;
-import io.mountblue.repository.PostRepository;
-import io.mountblue.repository.Post_TagRepository;
-import io.mountblue.repository.TagRepository;
+import io.mountblue.models.User;
+import io.mountblue.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -19,11 +28,20 @@ public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final TagRepository tagRepository;
     private final Post_TagRepository postTagRepository;
+    private final CustomPostRepository customPostRepository;
+    private final UserRepository userRepository;
 
-    public PostServiceImpl(PostRepository postRepository, TagRepository tagRepository, Post_TagRepository postTagRepository){
+    public PostServiceImpl(PostRepository postRepository,
+                           TagRepository tagRepository,
+                           Post_TagRepository postTagRepository,
+                           CustomPostRepository customPostRepository,
+                           UserRepository userRepository){
         this.postRepository = postRepository;
         this.tagRepository = tagRepository;
         this.postTagRepository = postTagRepository;
+        this.customPostRepository = customPostRepository;
+        this.userRepository = userRepository;
+
     }
     @Override
     public void savePost(PostDto postDto, String tagList) {
@@ -32,7 +50,10 @@ public class PostServiceImpl implements PostService{
         post.setTitle(postDto.getTitle());
         post.setExcerpt(createExcerpt(postDto.getContent()));
         post.setContent(postDto.getContent());
-        post.setAuthor("Abhisek");
+        if(postDto.getAuthor()!=null){
+            post.setAuthor(postDto.getAuthor());
+        }
+
         post.setIs_published(true);
         post.setPublished_at(LocalDateTime.now());
         post.setCreated_at(LocalDateTime.now());
@@ -86,7 +107,7 @@ public class PostServiceImpl implements PostService{
         post.setTitle(postdto.getTitle());
         post.setContent(postdto.getContent());
         post.setUpdated_at((LocalDateTime.now()));
-        System.out.println(post);
+        //System.out.println(post);
         postRepository.save(post);
     }
 
@@ -98,4 +119,34 @@ public class PostServiceImpl implements PostService{
         }
         postRepository.deleteById(id);
     }
+
+    @Override
+    public Page<Post> findFilteredPosts(Long authorId, List<Long> tagIds, Boolean isPublished, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable, String sortBy, String sortOrder) {
+        return customPostRepository.findFilteredPosts(authorId, tagIds, isPublished, startDate, endDate, pageable, sortBy, sortOrder);
+    }
+
+//    @Override
+//    public Page<Post> findFilteredPosts(String keyword, List<Long> tag, List<String> authors, Boolean isPublished,
+//                                        LocalDateTime startDate, LocalDateTime endDate, Pageable pageable,
+//                                        String sortBy, String sortOrder) {
+//
+//        Specification<Post> spec = Specification
+//                .where(PostSpecification.containsKeyword(keyword))
+//                .and(PostSpecification.hasTags(tag))
+//                .and(PostSpecification.hasAuthors(authors))
+//                .and(isPublished != null ? PostSpecification.isPublished(isPublished) : null)
+//                .and(PostSpecification.isWithinDateRange(startDate, endDate));
+//
+//        return postRepository.findAll(spec, pageable);
+//    }
+
+//    @Override
+//    public Page<Post> findFilteredPosts(String keyword, List<Long> tagIds, List<String> authors, Boolean isPublished,
+//                                        LocalDateTime startDate, LocalDateTime endDate, Pageable pageable,
+//                                        String sortBy, String sortOrder) {
+//
+//
+//    }
+
+
 }
