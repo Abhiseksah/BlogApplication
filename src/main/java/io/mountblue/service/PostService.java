@@ -16,6 +16,5 @@ public interface PostService {
     Post findPostById(Long id);
     void updatePost(PostDto postdto);
     void deletePost(Long id);
-    Page<Post> findFilteredPosts(Long authorId, List<Long> tagIds, Boolean isPublished,
-                                 LocalDateTime startDate, LocalDateTime endDate, Pageable pageable , String sortBy, String sortOrder) ;
-}
+    List<Post> searchPost(String keyword);
+   }

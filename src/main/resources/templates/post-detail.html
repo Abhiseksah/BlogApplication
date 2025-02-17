@@ -103,15 +103,20 @@
 <body>
 <div class="header">
     <span>My Blog Application</span>
-    <a href="/login">Login</a>
+<!--    <a href="/login">Login</a>-->
 </div>
 
 <div class="container">
     <h1 th:text="${post.title}">Post Title</h1>
-    <p class="author" th:text="${post.author} + ', ' + ${post.created_at}"></p>
+    <p class="author" th:text="${post.author.name} + ', ' + ${post.created_at}"></p>
     <p class="excerpt" th:text="${post.excerpt}">Post excerpt...</p>
     <p th:text="${post.content}">Full post content...</p>
 
+    <div class="tags-container">
+        <div>Tags</div>
+        <div th:text="${tags}"></div>
+
+    </div>
     <div class="comment-section">
         <h2>Comments</h2>
         <form action="#" th:action="@{/comments/post/{postId}(postId=${post.id})}" method="post">

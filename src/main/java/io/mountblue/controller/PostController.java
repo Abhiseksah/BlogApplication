@@ -5,16 +5,13 @@ import io.mountblue.models.Comment;
 import io.mountblue.models.Post;
 import io.mountblue.models.Tag;
 import io.mountblue.models.User;
+import io.mountblue.repository.Post_TagRepository;
 import io.mountblue.repository.UserRepository;
 import io.mountblue.service.CommentService;
 import io.mountblue.service.PostService;
 import io.mountblue.service.PostTagService;
 import io.mountblue.service.TagService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -23,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class PostController {
@@ -33,22 +29,28 @@ public class PostController {
     private final TagService tagService;
     private final CommentService commentService;
     private final UserRepository userRepository;
+    private final Post_TagRepository postTagRepository;
+    private final SearchController searchController;
 
     public PostController(PostService postService ,
                           PostTagService postTagService,
                           TagService tagService,
                           CommentService commentService,
-                          UserRepository userRepository){
+                          UserRepository userRepository,
+                          Post_TagRepository postTagRepository,
+                          SearchController searchController){
         this.postService = postService;
         this.postTagService = postTagService;
         this.tagService = tagService;
         this.commentService = commentService;
         this.userRepository = userRepository;
+        this.postTagRepository = postTagRepository;
+        this.searchController = searchController;
     }
 
     @GetMapping("/")
-    public String dashboard(@RequestParam(value = "author" , required = false) Long authorId ,
-                            @RequestParam(value = "tagId" , required = false) List<Long> tagIds ,
+    public String dashboard(@RequestParam(value = "author" , required = false) String author ,
+                            @RequestParam(value = "tag" , required = false) String tag,
                             @RequestParam(value = "isPublished" , required = false) Boolean isPublished ,
                             @RequestParam(value = "startDate" , required = false) LocalDateTime startDate ,
                             @RequestParam(value = "startDate" , required = false) LocalDateTime endDate ,
@@ -59,50 +61,24 @@ public class PostController {
                             Model model,HttpSession session,
                             @AuthenticationPrincipal UserDetails userDetails){
 
-//        int pageNo = start.intValue() ;
-//        int totalItems = limit.intValue() ;
-//
-//        Pageable pageable = PageRequest.of(pageNo - 1 , limit) ;
-//
-//        Page<Post> postPage=  postService.findFilteredPosts(authorId, tagIds,  isPublished,  startDate,  endDate,  pageable,  sortBy,  sortOrder) ;
-//
-//        List<Post> postList = postPage.getContent() ;
-//        List<Tag> tagsList = tagService.getAllTags() ;
-//
-//        model.addAttribute("currentPage" , pageNo) ;
-//        model.addAttribute("limit" , totalItems) ;
-//        model.addAttribute("totalPages" , postPage.getTotalPages()) ;
-//        model.addAttribute("totalItems" , postPage.getTotalElements()) ;
-//        model.addAttribute("postList" , postList) ;
-//        //   model.addAttribute("postt" , new Post()) ;
-//        model.addAttribute("tagList" , tagsList) ;
-
-        //System.out.println(tagIds);
-
-
-        //================================================================================
         List<Post> posts = postService.getAllPosts();
-//        for(Post post : posts){
-//            if(!post.getAuthor().getName().isBlank()){
-//                System.out.println("author name :" + post.getAuthor().getName());
-//            }else{
-//                System.out.println("blank author");
-//            }
-//
-//        }
-
-       List<Tag> tags = tagService.getAllTags();
-        if (userDetails != null) {
-            // Get email from UserDetails
-            String email = userDetails.getUsername();
-            // Fetch full user details from database
-            User user = userRepository.findByEmail(email);
-            // Send user details to Thymeleaf
-            model.addAttribute("user", user);
+        if(tag!=null){
+            posts = postService.searchPost(tag);
         }
-
+        if(author!=null){
+            List<Post> list=postService.searchPost(author);
+            for(Post l:list){
+                posts.add(l);
+            }
+        }
+        session.setAttribute("currentPosts" , posts);
+        List<Tag> tags = tagService.getAllTags();
+        if (userDetails != null) {
+            String email = userDetails.getUsername();
+        }
+        List<User> user = userRepository.findAll();
+        model.addAttribute("user", user);
         model.addAttribute("posts",posts);
-       // model.addAttribute("users",user);
         model.addAttribute("tag",tags);
         return "dashboard";
     }
@@ -111,9 +87,11 @@ public class PostController {
     public String postview(@PathVariable Long id,Model model){
         Post post = postService.findPostById(id);
         List<Comment> comment = commentService.getAllCommentByPostId(id);
-        //System.out.println(id);
+        List<String> tags = postTagRepository.findTagsByPostId(id);
         model.addAttribute("post",post);
         model.addAttribute("comments",comment);
+        model.addAttribute("tags",tags);
+
         return "post-detail";
     }
 
@@ -121,10 +99,8 @@ public class PostController {
     public String showeditpost(@PathVariable Long id,Model model){
         Post post = postService.findPostById(id);
         String tag = postTagService.FindTagbyPost(id);
-        //String tag = "this is autogenerated";
         model.addAttribute("post",post);
         model.addAttribute("taglist",tag);
-        //System.out.println("taglist------->"+tag);
         return "editpost";
     }
     @PostMapping("/post/edit/{id}")
@@ -160,4 +136,5 @@ public class PostController {
         postService.savePost(post,tag);
         return "redirect:/";
     }
+
 }

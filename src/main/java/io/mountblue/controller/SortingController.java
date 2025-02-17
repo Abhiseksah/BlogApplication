@@ -1,4 +1,8 @@
 package io.mountblue.controller;
+import io.mountblue.models.Tag;
+import io.mountblue.models.User;
+import io.mountblue.repository.TagRepository;
+import io.mountblue.repository.UserRepository;
 import io.mountblue.service.PostService;
 import io.mountblue.service.SortService;
 import org.slf4j.ILoggerFactory;
@@ -20,19 +24,25 @@ import java.util.List;
 @Controller
 public class SortingController {
     private final SortService sortService ;
+    private final UserRepository userRepository;
+    private final TagRepository tagRepository;
 
-    public SortingController(SortService sortService){
+    public SortingController(SortService sortService,
+                             UserRepository userRepository,
+                             TagRepository tagRepository){
         this.sortService = sortService;
+        this.userRepository = userRepository;
+        this.tagRepository = tagRepository;
     }
     @GetMapping("/posts/sort")
     public String getAllPost(@RequestParam(required = false) String sort, Model model, HttpSession session){
         List<Post> posts = (List<Post>) session.getAttribute("currentPosts");
-        System.out.println("-->"+sort);
         List<Post> sortedPosts = sortService.sortedPost(posts,sort);
-
-        System.out.println(sortedPosts);
-        //List<Post> sortedList = postService.
+        List<User> listOfUser = userRepository.findAll();
+        List<Tag> listOfTag = tagRepository.findAll();
+        model.addAttribute("listOfUser",listOfUser);
         model.addAttribute("posts",sortedPosts);
+        model.addAttribute("tag",listOfTag);
 
         return "sortpost";
     }

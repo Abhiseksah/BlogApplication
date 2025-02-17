@@ -13,7 +13,6 @@ public class SortServiceImpl implements SortService{
     public List<Post> sortedPost(List<Post> posts,String sortingStrategy) {
 
         if(sortingStrategy.equals("asc")){
-            System.out.println(sortingStrategy+"-----");
             Collections.sort(posts, new Comparator<Post>() {
                 @Override
                 public int compare(Post post1, Post post2) {
@@ -21,7 +20,6 @@ public class SortServiceImpl implements SortService{
                 }
             });
         }else{
-            System.out.println(sortingStrategy+"-----");
             Collections.sort(posts, new Comparator<Post>() {
                 @Override
                 public int compare(Post post1, Post post2) {

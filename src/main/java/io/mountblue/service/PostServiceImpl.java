@@ -28,18 +28,15 @@ public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final TagRepository tagRepository;
     private final Post_TagRepository postTagRepository;
-    private final CustomPostRepository customPostRepository;
     private final UserRepository userRepository;
 
     public PostServiceImpl(PostRepository postRepository,
                            TagRepository tagRepository,
                            Post_TagRepository postTagRepository,
-                           CustomPostRepository customPostRepository,
                            UserRepository userRepository){
         this.postRepository = postRepository;
         this.tagRepository = tagRepository;
         this.postTagRepository = postTagRepository;
-        this.customPostRepository = customPostRepository;
         this.userRepository = userRepository;
 
     }
@@ -107,7 +104,6 @@ public class PostServiceImpl implements PostService{
         post.setTitle(postdto.getTitle());
         post.setContent(postdto.getContent());
         post.setUpdated_at((LocalDateTime.now()));
-        //System.out.println(post);
         postRepository.save(post);
     }
 
@@ -121,32 +117,9 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Page<Post> findFilteredPosts(Long authorId, List<Long> tagIds, Boolean isPublished, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable, String sortBy, String sortOrder) {
-        return customPostRepository.findFilteredPosts(authorId, tagIds, isPublished, startDate, endDate, pageable, sortBy, sortOrder);
+    public List<Post> searchPost(String keyword) {
+        List<Post> listOfPost = postRepository.searchPosts(keyword);
+        return listOfPost;
     }
-
-//    @Override
-//    public Page<Post> findFilteredPosts(String keyword, List<Long> tag, List<String> authors, Boolean isPublished,
-//                                        LocalDateTime startDate, LocalDateTime endDate, Pageable pageable,
-//                                        String sortBy, String sortOrder) {
-//
-//        Specification<Post> spec = Specification
-//                .where(PostSpecification.containsKeyword(keyword))
-//                .and(PostSpecification.hasTags(tag))
-//                .and(PostSpecification.hasAuthors(authors))
-//                .and(isPublished != null ? PostSpecification.isPublished(isPublished) : null)
-//                .and(PostSpecification.isWithinDateRange(startDate, endDate));
-//
-//        return postRepository.findAll(spec, pageable);
-//    }
-
-//    @Override
-//    public Page<Post> findFilteredPosts(String keyword, List<Long> tagIds, List<String> authors, Boolean isPublished,
-//                                        LocalDateTime startDate, LocalDateTime endDate, Pageable pageable,
-//                                        String sortBy, String sortOrder) {
-//
-//
-//    }
-
 
 }

@@ -28,10 +28,7 @@ public class UserController {
     public String processRegister(@Valid @ModelAttribute UserDto userDto,
                                   BindingResult result,
                                   Model model) {
-        System.out.println("Email--1>"+result.hasErrors());
-//        if (result.hasErrors()) {
-//            return "register";
-//        }
+
         userDto.setRole("ROLE_AUTHOR");
         System.out.println("Email--->"+userDto.getEmail());
         String message = userService.addUser(userDto);
@@ -40,8 +37,6 @@ public class UserController {
             model.addAttribute("error", message);
             return "register";
         }
-
-
         return "redirect:/login";
     }
 }

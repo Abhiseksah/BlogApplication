@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>My Blog Application</title>
@@ -121,14 +122,14 @@
             <!-- Author Filter -->
             <h4>Authors</h4>
             <div th:each="post : ${user}">
-                <input type="checkbox" name="author" th:value="${post.name}" th:id="${'author-' + post}">
+                <input type="radio" name="author" th:value="${post.name}" th:id="${'author-' + post}">
                 <label th:for="${'author-' + post}" th:text="${post.name}"></label>
             </div>
 
             <!-- Tags Filter -->
             <h4>Tags</h4>
             <div th:each="tag : ${tag}">
-                <input type="checkbox" name="tag" th:value="${tag.id}" th:id="${'tag-' + tag}">
+                <input type="radio" name="tag" th:value="${tag.name}" th:id="${'tag-' + tag}">
                 <label th:for="${'tag-' + tag}" th:text="${tag.name}"></label>
             </div>
             <!-- Date Filter -->
@@ -146,8 +147,22 @@
     <div class="content">
         <div class="header">
             <h1>My Blog Application</h1>
-            <a href="/login">Login</a>
-            <a href="/newpost">New Post</a>
+<!--            <a href="/login">Login</a>-->
+<!--            <a href="/logout">Login</a>-->
+            <div class="header-buttons">
+                <div sec:authorize="isAnonymous()">
+                    <a th:href="@{/login}" class="login-btn">Login</a>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" th:method="post">
+                        <input th:type="submit" th:value="Logout" class="logout-btn" onclick="return confirm('Are you sure?');"/>
+                    </form>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <a th:href="@{/newpost}" class="newpost-btn">Create New Post</a>
+                </div>
+            </div>
+<!--            <a href="/newpost">New Post</a>-->
         </div>
 
         <div class="search">
@@ -179,10 +194,14 @@
                 </a>
 
                 <div class="post-actions">
+                    <div th:if="${#authorization.expression('hasRole(''ADMIN'')') or post.author.email == #authentication.name}">
                     <a th:href="@{/post/edit/{id}(id=${post.id})}" class="button edit">Edit</a>
+                    </div>
+                    <div th:if="${#authorization.expression('hasRole(''ADMIN'')') or post.author.email == #authentication.name}">
                     <form th:action="@{/post/delete/{id}(id=${post.id})}" method="post">
-                        <button type="submit" class="button delete">Delete</button>
+                        <button  type="submit" class="button delete">Delete</button>
                     </form>
+                    </div>
                 </div>
             </div>
         </div>

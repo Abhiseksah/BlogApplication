@@ -25,7 +25,7 @@
     <!-- Sidebar for Filters -->
     <div class="sidebar">
         <h3>Filter by</h3>
-        <form action="/posts/filter" method="get">
+        <form action="/posts/filter" method="post">
             <!-- Author Filter -->
             <h4>Authors</h4>
             <div th:each="post : ${listOfPost}">

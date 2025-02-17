@@ -39,23 +39,4 @@ public class LoginController {
     public String showLoginPage(){
         return "login";
     }
-//    @PostMapping("/login")
-//    public String login(@Valid @ModelAttribute LoginDto loginDto,
-//                        BindingResult result,
-//                        Model model,
-//                        HttpSession session){
-//        String message = loginService.verifyUser(loginDto);
-//        List<Post> posts = postService.getAllPosts();
-//        List<Tag> tags = tagService.getAllTags();
-//
-//        if(!message.equals("LoggedIn successfully")){
-//            model.addAttribute("error", message);
-//            return "login";
-//        }
-//        User user = userRepository.findByEmail(loginDto.getEmail());
-//        session.setAttribute("user",user);
-////        model.addAttribute("posts",posts);
-////        model.addAttribute("tag",tags);
-//        return "redirect:/";
-//    }
 }

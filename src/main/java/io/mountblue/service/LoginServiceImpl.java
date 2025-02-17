@@ -18,7 +18,6 @@ public class LoginServiceImpl implements LoginService{
     @Override
     public String verifyUser(LoginDto loginDto) {
         User user = userRepository.findByEmail(loginDto.getEmail());
-        //System.out.println("----USER---->"+user);
         if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
             return "Invalid password!";
         }

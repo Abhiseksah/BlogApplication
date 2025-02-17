@@ -28,15 +28,15 @@
         <form action="/posts/filter" method="get">
             <!-- Author Filter -->
             <h4>Authors</h4>
-            <div th:each="post : ${listOfPost}">
-                <input type="checkbox" name="author" th:value="${post.author}" th:id="${'author-' + author}">
-                <label th:for="${'author-' + author}" th:text="${post.author}"></label>
+            <div th:each="post : ${user}">
+                <input type="radio" name="author" th:value="${post.name}" th:id="${'author-' + author}">
+                <label th:for="${'author-' + author}" th:text="${post.name}"></label>
             </div>
 
             <!-- Tags Filter -->
             <h4>Tags</h4>
             <div th:each="tag : ${tag}">
-                <input type="checkbox" name="tag" th:value="${tag.name}" th:id="${'tag-' + tag}">
+                <input type="radio" name="tag" th:value="${tag.name}" th:id="${'tag-' + tag}">
                 <label th:for="${'tag-' + tag}" th:text="${tag.name}"></label>
             </div>
             <!-- Date Filter -->
@@ -81,7 +81,7 @@
             <div th:each="post : ${listOfPost}" class="post">
                 <a th:href="@{/post/{id}(id=${post.id})}" class="post-link">
                     <h3 th:text="${post.title}">Title</h3>
-                    <p><strong th:text="${post.author}">Author Name</strong>, <span th:text="${post.created_at}">Date</span></p>
+                    <p><strong th:text="${post.author.name}">Author Name</strong>, <span th:text="${post.created_at}">Date</span></p>
                     <p th:text="${post.excerpt}"></p>
                 </a>
 

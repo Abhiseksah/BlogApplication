@@ -22,19 +22,21 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(configurer ->
                         configurer
-//                                .requestMatchers("/edit/**" , "/editpost/**").hasRole("ADMIN")
-                                .requestMatchers("post/delete/**").hasRole("ADMIN")
-//                                .requestMatchers("/post/**").hasAnyRole("ADMIN", "AUTHOR")
-                                .requestMatchers("/","/signup","/login", "/logout").permitAll()
-                                //.requestMatchers("/css/**", "/js/**", "/images/**" ).permitAll()
-                                //.requestMatchers("/newpost", "/edit/**", "/delete/**").hasRole("ADMIN")
-                                .requestMatchers("/newpost").hasAnyRole("ADMIN", "AUTHOR")
-                                .requestMatchers("/comment/reply/**").authenticated()
+                                .requestMatchers("post/delete/**","/post/edit/**","comments/delete").hasAnyRole("ADMIN", "AUTHOR")
+                                .requestMatchers("/post/**").permitAll()
+                                .requestMatchers("/login").anonymous()
+                                .requestMatchers("/css/**", "/js/**", "/images/**" ).permitAll()
+                                .requestMatchers("/newpost", "/delete/**","/edit/**").hasAnyRole("ADMIN", "AUTHOR")
+                                .requestMatchers("/comment/reply/**","/","/signup","/logout").permitAll()
+                                .requestMatchers("/posts/search","/posts/sort","/posts/filter").permitAll()
+                                .requestMatchers("/comment/post/**").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .formLogin(form ->
                         form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/authenticateTheUser")
+                                .defaultSuccessUrl("/", true)
                                 .permitAll()
                 ).logout(logout -> logout
                         .invalidateHttpSession(true)

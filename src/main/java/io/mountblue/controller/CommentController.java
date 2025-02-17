@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class CommentController {
@@ -45,6 +46,13 @@ public class CommentController {
         comm = commentRepositoy.save(comm);
         comment.getComments().add(comm);
         commentRepositoy.save(comment);
+        return "redirect:/";
+    }
+
+    @PostMapping("comments/delete/{id}")
+    public String deleteComment(@PathVariable("id") Long id){
+        Optional<Comment> comment = commentRepositoy.findById(id);
+        commentRepositoy.delete(comment.get());
         return "redirect:/";
     }
 }
